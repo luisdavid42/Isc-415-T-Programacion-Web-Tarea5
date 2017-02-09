@@ -10,12 +10,13 @@
     </div>
 
      <script>
-
     var containerDiv = document.body.getElementsByClassName("container")[0];
     var matrix = document.body.getElementsByClassName("cell");
+    var snake = [];
+    var snakeLength = 4;
+    var snakeMode = -1;
     //keyboard input
     //document.body.setAttribute("onkeydown", "setActivewithKeyboard(event)");
-
     for(var i=0; i<100; i++)
     {
       var newRow = document.createElement("div");
@@ -25,76 +26,116 @@
       newRow.appendChild(newRowElement);
       containerDiv.appendChild(newRow);
     }
-
     createSnake(getRandom(0,9), getRandom(0,9));
-
     //crea y renderiza la cabeza de la culebra en la posición especificada
     function createSnake(x,y){
       width = 10;
-
-      var headCell = cellTranslate(x,y,width);
-      matrix[headCell].classList.add("active-head");
-
-      createTail(headCell,1,3)
+      var headCell = new Object;
+      headCell.x = x;
+      headCell.y = y;
+      
+      headCell.pos= cellTranslate(x,y,width);//la posición en el arreglo unidimensional
+      //alert("x: " + headCell.xy);
+      matrix[headCell.pos].classList.add("active-head");
+      snake.push(headCell);//agregando el objeto cabeza a la estructura culebra
+      createTail(headCell,snakeMode,snakeLength)
     }
-
     function createTail(head,dir,numCells){
+      //alert("x: " + head.x + "\ny: " + head.y + "\npos: " + head.pos);
+      
+      
       //horizontal
-      if(dir === 0){
+      if(dir === -1){
         for(var i=0;i<numCells;i++)
         {
-          matrix[head-(i+1)].classList.add("active");
+          var newBlock = new Object;
+          newBlock.pos=head.pos - (i+1);
+          //revisando si la cola de la culebra pasa de lado
+          if(head.x<i+1)
+          {
+            newBlock.pos+=10;
+          }
+          //growTail(newBlock);  
+          matrix[newBlock.pos].classList.add("active");
+          snake.push(new Object(newBlock));//agregando el objeto bloque de la cola a la estructura culebra
         }
       }
       //vertical
       else if (dir === 1) {
         for(var i=0;i<numCells;i++)
         {
-          matrix[head-((i+1)*10)].classList.add("active");
+          var newBlock = new Object;
+          newBlock.pos=head.pos - ((i+1)*10);
+          //revisando si la cola de la culebra pasa de lado
+          if(head.y<i+1)
+          {
+            newBlock.pos+=100;
+          }
+          //growTail(newBlock);  
+          
+          matrix[newBlock.pos].classList.add("active");
+          snake.push(newBlock);//agregando el objeto bloque de la cola a la estructura culebra
         }
+      }
+      
+    }
+    // function growTail(block)
+    // {
+    //   if(!tail.includes(block))
+    //       tail.push(block);
+    // }
+    setInterval(
+      function move(){
+
+      newPoint = new Object;
+      //horizontal
+      if(snakeMode === -1){
+        if(snake[0].x%9==0)//cuando llega al límite de la matriz
+            snake[0].x-=9;
+        newPoint.x = snake[0].x+1;
+        newPoint.y = snake[0].y;
+      }
+      //vertical
+      else if (snakeMode === 1) {
+        if(snake[0].y%9==0)//cuando llega al límite de la matriz
+            snake[0].y-=9;
+        newPoint.x = snake[0].x;
+        newPoint.y = snake[0].y+1;
       }
 
 
-      
-    }
 
 
 
 
+
+
+
+
+       
+          
+          
+        //limpiando la pantalla
+         matrix[snake[0].pos].classList.remove("active-head");
+        for(var i = 1; i<snake.length;i++) {
+            matrix[snake[i].pos].classList.remove("active");
+        }
+        //limpiando el arreglo
+        snake = [];
+        //reiniciando el proceso
+        createSnake(newPoint.x,newPoint.y);
+        }, 500)
     //traduce un par de posiciones x,y de un arreglo bidimensional, en una posición unidimensional
     function cellTranslate(x,y,width){
         return width * y + x;
       }
-
-    //obtiene un némero aleatorio entre el rango especificado(incluyente)
+    //obtiene un número aleatorio entre el rango especificado(incluyente)
     function getRandom(min, max) { 
       min = Math.ceil(min);
       max = Math.floor(max);
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
-
-
-
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     function setActivewithKeyboard(event)
     {
       var activeCells = document.body.getElementsByClassName("cell");
@@ -108,33 +149,27 @@
         }
       }
       const keyName = event.key;
-
 		  //izquierda
 		  if (keyName === 'a'){
 		    if(activeCellNumber-1>=0) {activeCells[activeCellNumber].classList.remove("active"); activeCells[activeCellNumber-1].classList.add("active")};
 		    return;
 		  }
-
 		  //abajo
 		  if (keyName === 's') {
 		    if(activeCellNumber+10<100) {activeCells[activeCellNumber].classList.remove("active"); activeCells[activeCellNumber+10].classList.add("active")};
 		    return;
 		  }
-
 		  //derecha
 		  if (keyName === 'd') {
 		    if(activeCellNumber+1<100) {activeCells[activeCellNumber].classList.remove("active"); activeCells[activeCellNumber+1].classList.add("active")};
 		    return;
 		  }
-
 		  //arriba
 		  if (keyName === 'w') {
 		    if(activeCellNumber-10>=0) {activeCells[activeCellNumber].classList.remove("active"); activeCells[activeCellNumber-10].classList.add("active")};
 		    return;
 		  }
 		}
-    
-
     </script>
   </body>
 </html>
