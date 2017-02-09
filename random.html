@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="grid.css" media="screen" title="no title" charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <div class="container">
+    </div>
+
+     <script>
+
+    var containerDiv = document.body.getElementsByClassName("container")[0];
+    var matrix = document.body.getElementsByClassName("cell");
+    //keyboard input
+    //document.body.setAttribute("onkeydown", "setActivewithKeyboard(event)");
+
+    for(var i=0; i<100; i++)
+    {
+      var newRow = document.createElement("div");
+      newRow.classList.add("cell");
+      newRow.setAttribute("onclick", "Ejercicio2(this)");
+      var newRowElement = document.createTextNode("");
+      newRow.appendChild(newRowElement);
+      containerDiv.appendChild(newRow);
+    }
+
+    createSnake(getRandom(0,9), getRandom(0,9));
+
+    //crea y renderiza la cabeza de la culebra en la posición especificada
+    function createSnake(x,y){
+      width = 10;
+
+      var headCell = cellTranslate(x,y,width);
+      matrix[headCell].classList.add("active-head");
+
+      createTail(headCell,1,3)
+    }
+
+    function createTail(head,dir,numCells){
+      //horizontal
+      if(dir === 0){
+        for(var i=0;i<numCells;i++)
+        {
+          matrix[head-(i+1)].classList.add("active");
+        }
+      }
+      //vertical
+      else if (dir === 1) {
+        for(var i=0;i<numCells;i++)
+        {
+          matrix[head-((i+1)*10)].classList.add("active");
+        }
+      }
+
+
+      
+    }
+
+
+
+
+    //traduce un par de posiciones x,y de un arreglo bidimensional, en una posición unidimensional
+    function cellTranslate(x,y,width){
+        return width * y + x;
+      }
+
+    //obtiene un némero aleatorio entre el rango especificado(incluyente)
+    function getRandom(min, max) { 
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function setActivewithKeyboard(event)
+    {
+      var activeCells = document.body.getElementsByClassName("cell");
+      var activeCellNumber = -1;
+      for (var i = 0; i<activeCells.length; i++)
+      {
+        if(activeCells[i].classList.contains("active"))
+        {
+          activeCellNumber = i;
+          
+        }
+      }
+      const keyName = event.key;
+
+		  //izquierda
+		  if (keyName === 'a'){
+		    if(activeCellNumber-1>=0) {activeCells[activeCellNumber].classList.remove("active"); activeCells[activeCellNumber-1].classList.add("active")};
+		    return;
+		  }
+
+		  //abajo
+		  if (keyName === 's') {
+		    if(activeCellNumber+10<100) {activeCells[activeCellNumber].classList.remove("active"); activeCells[activeCellNumber+10].classList.add("active")};
+		    return;
+		  }
+
+		  //derecha
+		  if (keyName === 'd') {
+		    if(activeCellNumber+1<100) {activeCells[activeCellNumber].classList.remove("active"); activeCells[activeCellNumber+1].classList.add("active")};
+		    return;
+		  }
+
+		  //arriba
+		  if (keyName === 'w') {
+		    if(activeCellNumber-10>=0) {activeCells[activeCellNumber].classList.remove("active"); activeCells[activeCellNumber-10].classList.add("active")};
+		    return;
+		  }
+		}
+    
+
+    </script>
+  </body>
+</html>
