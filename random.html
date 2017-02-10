@@ -67,7 +67,7 @@
         //revisando si la cola de la culebra pasa de lado
         if(head.x<i+1)
         {
-          newBlock.pos+=10;
+          gameReset();
         }
         matrix[newBlock.pos].classList.add("active");
         snake.push(new Object(newBlock));//agregando el objeto bloque de la cola a la estructura culebra
@@ -78,11 +78,11 @@
       for(var i=0;i<numCells;i++)
       {
         var newBlock = new Object;
-        newBlock.pos=head.pos - (i+1);
+        newBlock.pos=head.pos + (i+1);
         //revisando si la cola de la culebra pasa de lado
         if(head.x<i+1)
         {
-          newBlock.pos+=10;
+          gameReset();
         }
         matrix[newBlock.pos].classList.add("active");
         snake.push(new Object(newBlock));//agregando el objeto bloque de la cola a la estructura culebra
@@ -97,7 +97,7 @@
         //revisando si la cola de la culebra pasa de lado
         if(head.y<i+1)
         {
-          newBlock.pos+=100;
+          gameReset();
         }
 
         matrix[newBlock.pos].classList.add("active");
@@ -113,7 +113,7 @@
         //revisando si la cola de la culebra pasa de lado
         if(head.y<i+1)
         {
-          newBlock.pos+=100;
+          gameReset();
         }
         matrix[newBlock.pos].classList.add("active");
         snake.push(newBlock);//agregando el objeto bloque de la cola a la estructura culebra
@@ -155,13 +155,9 @@
       newPoint.x = snake[0].x;
       newPoint.y = snake[0].y+1;
     }
-    //limpiando la pantalla
-    matrix[snake[0].pos].classList.remove("active-head");
-    for(var i = 1; i<snake.length;i++) {
-      matrix[snake[i].pos].classList.remove("active");
-    }
-    //limpiando el arreglo
-    snake = [];
+
+    limpiandoSnake();
+
     //reiniciando el proceso
     createSnake(newPoint.x,newPoint.y);
   }
@@ -240,6 +236,27 @@
       return;
     }
   }
+
+  function limpiandoSnake()
+  {
+    //limpiando la pantalla
+    matrix[snake[0].pos].classList.remove("active-head");
+    for(var i = 1; i<snake.length;i++) {
+      matrix[snake[i].pos].classList.remove("active");
+    }
+    //limpiando el arreglo
+    snake = [];
+  }
+
+  function gameReset()
+  {
+    limpiandoSnake();
+    createSnake(getRandom(0,9), getRandom(0,9));
+    console.log("Llegue");
+    //alert("y klk, eso no e na");
+  }
+
+
 </script>
 </body>
 </html>
