@@ -1,178 +1,245 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="grid.css" media="screen" title="no title" charset="utf-8">
-    <title></title>
-  </head>
-  <body>
-    <div class="container">
-    </div>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="grid.css" media="screen" title="no title" charset="utf-8">
+  <title></title>
+</head>
+<body>
+<div class="container">
+</div>
 
-     <script>
-    var containerDiv = document.body.getElementsByClassName("container")[0];
-    var matrix = document.body.getElementsByClassName("cell");
-    var snake = [];
-    var snakeLength = 4;
-    var snakeMode = -1;
-    //keyboard input
-    document.body.setAttribute("onkeydown", "movewKeyboard(event)");
-    for(var i=0; i<100; i++)
-    {
-      var newRow = document.createElement("div");
-      newRow.classList.add("cell");
-      newRow.setAttribute("onclick", "Ejercicio2(this)");
-      var newRowElement = document.createTextNode("");
-      newRow.appendChild(newRowElement);
-      containerDiv.appendChild(newRow);
-    }
-    createSnake(getRandom(0,9), getRandom(0,9));
-    //crea y renderiza la cabeza de la culebra en la posición especificada
-    function createSnake(x,y){
-      width = 10;
-      var headCell = new Object;
-      headCell.x = x;
-      headCell.y = y;
-      
-      headCell.pos= cellTranslate(x,y,width);//la posición en el arreglo unidimensional
-      //alert("x: " + headCell.xy);
-      matrix[headCell.pos].classList.add("active-head");
-      snake.push(headCell);//agregando el objeto cabeza a la estructura culebra
-      createTail(headCell,snakeMode,snakeLength)
-    }
-    function createTail(head,dir,numCells){
-      //alert("x: " + head.x + "\ny: " + head.y + "\npos: " + head.pos);
-      
-      
-      //horizontal
-      if(dir === -1){
-        for(var i=0;i<numCells;i++)
-        {
-          var newBlock = new Object;
-          newBlock.pos=head.pos - (i+1);
-          //revisando si la cola de la culebra pasa de lado
-          if(head.x<i+1)
-          {
-            newBlock.pos+=10;
-          }
-          //growTail(newBlock);  
-          matrix[newBlock.pos].classList.add("active");
-          snake.push(new Object(newBlock));//agregando el objeto bloque de la cola a la estructura culebra
-        }
-      }
-      //vertical
-      else if (dir === 1) {
-        for(var i=0;i<numCells;i++)
-        {
-          var newBlock = new Object;
-          newBlock.pos=head.pos - ((i+1)*10);
-          //revisando si la cola de la culebra pasa de lado
-          if(head.y<i+1)
-          {
-            newBlock.pos+=100;
-          }
-          //growTail(newBlock);  
-          
-          matrix[newBlock.pos].classList.add("active");
-          snake.push(newBlock);//agregando el objeto bloque de la cola a la estructura culebra
-        }
-      }
-      
-    }
-    // function growTail(block)
-    // {
-    //   if(!tail.includes(block))
-    //       tail.push(block);
-    // }
+<script>
+  var containerDiv = document.body.getElementsByClassName("container")[0];
+  var matrix = document.body.getElementsByClassName("cell");
+  var snake = [];
+  var snakeLength = 4;
+  var snakeMode = {};
+  snakeMode.x=1;
+  snakeMode.y=0;
+  //alert(snakeMode.x + ", " + snakeMode.y);
+
+  //(1,0): se mueve hacia la derecha
+  //(-1,0): se mueve hacia la izquierda
+  //(0,1): se mueve hacia arriba
+  //(0,-1): se mueve hacia abajo
+
+  //keyboard input
+  document.body.setAttribute("onkeydown", "movewKeyboard(event)");
+  for(var i=0; i<100; i++)
+  {
+    var newRow = document.createElement("div");
+    newRow.classList.add("cell");
+    newRow.setAttribute("onclick", "Ejercicio2(this)");
+    var newRowElement = document.createTextNode("");
+    newRow.appendChild(newRowElement);
+    containerDiv.appendChild(newRow);
+  }
+  createSnake(getRandom(0,9), getRandom(0,9));
+  //crea y renderiza la cabeza de la culebra en la posición especificada
+  function createSnake(x,y){
+    width = 10;
+    var headCell = new Object;
+    headCell.x = x;
+    headCell.y = y;
+
+    headCell.pos= cellTranslate(x,y,width);//la posición en el arreglo unidimensional
+    //alert("x: " + headCell.xy);
+    matrix[headCell.pos].classList.add("active-head");
+    snake.push(headCell);//agregando el objeto cabeza a la estructura culebra
+    createTail(headCell,snakeMode,snakeLength)
+  }
+  function createTail(head,dir,numCells){
+    //alert("x: " + head.x + "\ny: " + head.y + "\npos: " + head.pos);
 
 
-      function move(){
-      newPoint = new Object;
-      //horizontal
-      if(snakeMode === -1){
-        if(snake[0].x%9==0)//cuando llega al límite de la matriz
-            snake[0].x-=9;
-        newPoint.x = snake[0].x+1;
-        newPoint.y = snake[0].y;
-      }
-      //vertical
-      else if (snakeMode === 1) {
-        if(snake[0].y%9==0)//cuando llega al límite de la matriz
-            snake[0].y-=9;
-        newPoint.x = snake[0].x;
-        newPoint.y = snake[0].y+1;
-      }
-        //limpiando la pantalla
-         matrix[snake[0].pos].classList.remove("active-head");
-        for(var i = 1; i<snake.length;i++) {
-            matrix[snake[i].pos].classList.remove("active");
-        }
-        //limpiando el arreglo
-        snake = [];
-        //reiniciando el proceso
-        createSnake(newPoint.x,newPoint.y);
-        }
+    //(1,0): se mueve hacia la derecha
+    //(-1,0): se mueve hacia la izquierda
+    //(0,1): se mueve hacia arriba
+    //(0,-1): se mueve hacia abajo
 
-    setInterval(move, 500);
-    //traduce un par de posiciones x,y de un arreglo bidimensional, en una posición unidimensional
-    function cellTranslate(x,y,width){
-        return width * y + x;
-      }
-    //obtiene un número aleatorio entre el rango especificado(incluyente)
-    function getRandom(min, max) { 
-      min = Math.ceil(min);
-      max = Math.floor(max);
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-    
-    //procesa el evento de keypress de una tecla de movimiento
-    //cambia el sentido de la culebra
-    function movewKeyboard(event)
-    {
-      var activeCells = document.body.getElementsByClassName("cell");
-      var activeCellNumber = -1;
-      for (var i = 0; i<activeCells.length; i++)
+    //derecha
+    if(dir.x === 1 && dir.y === 0){
+      for(var i=0;i<numCells;i++)
       {
-        if(activeCells[i].classList.contains("active"))
+        var newBlock = new Object;
+        newBlock.pos=head.pos - (i+1);
+        //revisando si la cola de la culebra pasa de lado
+        if(head.x<i+1)
         {
-          activeCellNumber = i;
+          newBlock.pos+=10;
         }
+        matrix[newBlock.pos].classList.add("active");
+        snake.push(new Object(newBlock));//agregando el objeto bloque de la cola a la estructura culebra
       }
-      const keyName = event.key;
-		  //izquierda
-		  if (keyName === 'a'){
-        if(snakeMode==1)
+    }
+    //izquierda
+    else if(dir.x === -1 && dir.y === 0){//TODO: CAMBIAAAAAAAAAAAAAAARRR
+      for(var i=0;i<numCells;i++)
+      {
+        var newBlock = new Object;
+        newBlock.pos=head.pos - (i+1);
+        //revisando si la cola de la culebra pasa de lado
+        if(head.x<i+1)
         {
-          snakeMode=-1;
+          newBlock.pos+=10;
         }
-		    // if(activeCellNumber-1>=0) {activeCells[snake[0].pos].classList.remove("active-head"); activeCells[activeCellNumber-1].classList.add("active-head")};
-		    return;
-		  }
-		  //abajo
-		  if (keyName === 's') {
-		    if(snakeMode==-1)
+        matrix[newBlock.pos].classList.add("active");
+        snake.push(new Object(newBlock));//agregando el objeto bloque de la cola a la estructura culebra
+      }
+    }
+    //arriba
+    else if (dir.x === 0 && dir.y === 1) {//TODO: CAMBIAAAAAAAAAAAAAAARRR
+      for(var i=0;i<numCells;i++)
+      {
+        var newBlock = new Object;
+        newBlock.pos=head.pos - ((i+1)*10);
+        //revisando si la cola de la culebra pasa de lado
+        if(head.y<i+1)
         {
-          snakeMode=1;
+          newBlock.pos+=100;
         }
-		    return;
-		  }
-		  //derecha
-		  if (keyName === 'd') {
-		    if(snakeMode==1)
+
+        matrix[newBlock.pos].classList.add("active");
+        snake.push(newBlock);//agregando el objeto bloque de la cola a la estructura culebra
+      }
+    }
+    //abajo
+    else if (dir.x === 0 && dir.y === -1) {
+      for(var i=0;i<numCells;i++)
+      {
+        var newBlock = new Object;
+        newBlock.pos=head.pos - ((i+1)*10);
+        //revisando si la cola de la culebra pasa de lado
+        if(head.y<i+1)
         {
-          snakeMode=-1;
+          newBlock.pos+=100;
         }
-		    return;
-		  }
-		  //arriba
-		  if (keyName === 'w') {
-		    if(snakeMode==-1)
-        {
-          snakeMode=1;
-        }
-		    return;
-		  }
-		}
-    </script>
-  </body>
+        matrix[newBlock.pos].classList.add("active");
+        snake.push(newBlock);//agregando el objeto bloque de la cola a la estructura culebra
+      }
+    }
+
+  }
+
+  function move(){
+    newPoint = new Object;
+    //alert(snakeMode.x + ", " + snakeMode.y);
+    //alert("vamos a movernos pa bajo!");
+    //si se está moviendo a la izquierda
+    if(snakeMode.x === -1 && snakeMode.y === 0){//TODO: CAMBIAAAAAAAAAAAAAAARRR
+      if(snake[0].x%9==0)//cuando llega al límite de la matriz
+        snake[0].x-=9;
+      newPoint.x = snake[0].x+1;
+      newPoint.y = snake[0].y;
+    }
+    //si se está moviendo a la derecha
+    else if(snakeMode.x === 1 && snakeMode.y === 0){
+      if(snake[0].x%9==0)//cuando llega al límite de la matriz
+        snake[0].x-=9;
+      newPoint.x = snake[0].x+1;
+      newPoint.y = snake[0].y;
+    }
+    //si se está moviendo hacia abajo
+    else if (snakeMode.x === 0 && snakeMode.y === -1) {
+      if(snake[0].y%9==0)//cuando llega al límite de la matriz
+        snake[0].y-=9;
+      newPoint.x = snake[0].x;
+      newPoint.y = snake[0].y+1;
+      //alert("vamos a movernos pa bajo!");
+    }
+    //si se está moviendo hacia arriba
+    else if (snakeMode.x === 0 && snakeMode.y === 1) {//TODO: CAMBIAAAAAAAAAAAAAAARRR
+      if(snake[0].y%9==0)//cuando llega al límite de la matriz
+        snake[0].y-=9;
+      newPoint.x = snake[0].x;
+      newPoint.y = snake[0].y+1;
+    }
+    //limpiando la pantalla
+    matrix[snake[0].pos].classList.remove("active-head");
+    for(var i = 1; i<snake.length;i++) {
+      matrix[snake[i].pos].classList.remove("active");
+    }
+    //limpiando el arreglo
+    snake = [];
+    //reiniciando el proceso
+    createSnake(newPoint.x,newPoint.y);
+  }
+
+  setInterval(move, 500);
+  //traduce un par de posiciones x,y de un arreglo bidimensional, en una posición unidimensional
+  function cellTranslate(x,y,width){
+    return width * y + x;
+  }
+  //obtiene un número aleatorio entre el rango especificado(incluyente)
+  function getRandom(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  //procesa el evento de keypress de una tecla de movimiento
+  //cambia el sentido de la culebra
+  function movewKeyboard(event)
+  {
+    var activeCells = document.body.getElementsByClassName("cell");
+    var activeCellNumber = -1;
+    for (var i = 0; i<activeCells.length; i++)
+    {
+      if(activeCells[i].classList.contains("active"))
+      {
+        activeCellNumber = i;
+      }
+    }
+    const keyName = event.key;
+
+    //snakeMode States
+    // -2 izquierda
+    // -1 derecha
+
+    // 1 abajo
+    // 2 arriba
+
+
+    //izquierda
+    if (keyName === 'a'){
+      if(snakeMode.x===0)//si se está moviendo verticalmente
+      {
+        snakeMode.x=-1;
+        snakeMode.y=0;
+      }
+      // if(activeCellNumber-1>=0) {activeCells[snake[0].pos].classList.remove("active-head"); activeCells[activeCellNumber-1].classList.add("active-head")};
+      return;
+    }
+    //derecha
+    if (keyName === 'd') {
+      if(snakeMode.x===0)//si se está moviendo verticalmente
+      {
+        snakeMode.x=1;
+        snakeMode.y=0;
+      }
+      return;
+    }
+    //abajo
+    if (keyName === 's') {
+      if(snakeMode.y===0)//si se está moviendo horizontalmente
+      {
+        //alert("vamos a movernos pa bajo!");
+        snakeMode.x=0;
+        snakeMode.y=-1;
+      }
+      return;
+    }
+    //arriba
+    if (keyName === 'w') {
+      if(snakeMode.y===0)//si se está moviendo horizontalmente
+      {
+        snakeMode.x=0;
+        snakeMode.y=1;
+      }
+      return;
+    }
+  }
+</script>
+</body>
 </html>
