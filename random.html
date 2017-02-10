@@ -125,7 +125,9 @@
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
     
-    function setActivewithKeyboard(event)
+    //procesa el evento de keypress de una tecla de movimiento
+    //cambia el sentido de la culebra
+    function movewKeyboard(event)
     {
       var activeCells = document.body.getElementsByClassName("cell");
       var activeCellNumber = -1;
