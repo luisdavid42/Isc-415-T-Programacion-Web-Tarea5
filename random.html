@@ -16,9 +16,9 @@
   var snakeBaseLength = 4;
   var snakeLength = snakeBaseLength;
   var snakeMode = {};
+  var bait = new Object;
   snakeMode.x=1;
   snakeMode.y=0;
-  //alert(snakeMode.x + ", " + snakeMode.y);
 
   //(1,0): se mueve hacia la derecha
   //(-1,0): se mueve hacia la izquierda
@@ -37,6 +37,8 @@
     containerDiv.appendChild(newRow);
   }
   createSnake(getRandom(0,9), getRandom(0,9));
+  createBait();
+
   //crea y renderiza la cabeza de la culebra en la posición especificada
   function createSnake(x,y){
     width = 10;
@@ -167,6 +169,7 @@
   }
 
   setInterval(move, 500);
+
   //traduce un par de posiciones x,y de un arreglo bidimensional, en una posición unidimensional
   function cellTranslate(x,y,width){
     return width * y + x;
@@ -216,7 +219,6 @@
     if (keyName === 's') {
       if(snakeMode.y===0)//si se está moviendo horizontalmente
       {
-        //alert("vamos a movernos pa bajo!");
         snakeMode.x=0;
         snakeMode.y=-1;
       }
@@ -231,6 +233,17 @@
       }
       return;
     }
+  }
+
+  function createBait()
+  {
+    width = 10;
+
+
+    bait.x = getRandom(0,9);
+    bait.y = getRandom(0,9);
+    bait.pos = cellTranslate(bait.x,bait.y,width);//la posición en el arreglo unidimensional
+    matrix[bait.pos].classList.add("bait");
   }
 
   function limpiandoSnake()
@@ -249,10 +262,7 @@
     limpiandoSnake();
     snakeLength=snakeBaseLength;
     createSnake(getRandom(0,9), getRandom(0,9));
-    console.log("Llegue");
   }
-
-
 </script>
 </body>
 </html>
