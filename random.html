@@ -13,7 +13,8 @@
   var containerDiv = document.body.getElementsByClassName("container")[0];
   var matrix = document.body.getElementsByClassName("cell");
   var snake = [];
-  var snakeLength = 4;
+  var snakeBaseLength = 4;
+  var snakeLength = snakeBaseLength;
   var snakeMode = {};
   snakeMode.x=1;
   snakeMode.y=0;
@@ -68,6 +69,7 @@
         if(head.x<i+1)
         {
           gameReset();
+          return;
         }
         matrix[newBlock.pos].classList.add("active");
         snake.push(new Object(newBlock));//agregando el objeto bloque de la cola a la estructura culebra
@@ -79,10 +81,11 @@
       {
         var newBlock = new Object;
         newBlock.pos=head.pos + (i+1);
-        //revisando si la cola de la culebra pasa de lado
-        if(head.x<i+1)
+        //revisando si la cabeza de la culebra pasa de lado
+        if(head.x>i+1)
         {
           gameReset();
+          return;
         }
         matrix[newBlock.pos].classList.add("active");
         snake.push(new Object(newBlock));//agregando el objeto bloque de la cola a la estructura culebra
@@ -93,11 +96,12 @@
       for(var i=0;i<numCells;i++)
       {
         var newBlock = new Object;
-        newBlock.pos=head.pos - ((i+1)*10);
+        newBlock.pos=head.pos + ((i+1)*10);
         //revisando si la cola de la culebra pasa de lado
-        if(head.y<i+1)
+        if(head.y>i+1)
         {
           gameReset();
+          return;
         }
 
         matrix[newBlock.pos].classList.add("active");
@@ -114,12 +118,12 @@
         if(head.y<i+1)
         {
           gameReset();
+          return;
         }
         matrix[newBlock.pos].classList.add("active");
         snake.push(newBlock);//agregando el objeto bloque de la cola a la estructura culebra
       }
     }
-
   }
 
   function move(){
@@ -127,10 +131,10 @@
     //alert(snakeMode.x + ", " + snakeMode.y);
     //alert("vamos a movernos pa bajo!");
     //si se está moviendo a la izquierda
-    if(snakeMode.x === -1 && snakeMode.y === 0){//TODO: CAMBIAAAAAAAAAAAAAAARRR
+    if(snakeMode.x === -1 && snakeMode.y === 0){
       if(snake[0].x%9==0)//cuando llega al límite de la matriz
-        snake[0].x-=9;
-      newPoint.x = snake[0].x+1;
+        snake[0].x+=9;
+      newPoint.x = snake[0].x-1;
       newPoint.y = snake[0].y;
     }
     //si se está moviendo a la derecha
@@ -149,11 +153,11 @@
       //alert("vamos a movernos pa bajo!");
     }
     //si se está moviendo hacia arriba
-    else if (snakeMode.x === 0 && snakeMode.y === 1) {//TODO: CAMBIAAAAAAAAAAAAAAARRR
+    else if (snakeMode.x === 0 && snakeMode.y === 1) {
       if(snake[0].y%9==0)//cuando llega al límite de la matriz
-        snake[0].y-=9;
+        snake[0].y+=9;
       newPoint.x = snake[0].x;
-      newPoint.y = snake[0].y+1;
+      newPoint.y = snake[0].y-1;
     }
 
     limpiandoSnake();
@@ -188,14 +192,6 @@
       }
     }
     const keyName = event.key;
-
-    //snakeMode States
-    // -2 izquierda
-    // -1 derecha
-
-    // 1 abajo
-    // 2 arriba
-
 
     //izquierda
     if (keyName === 'a'){
@@ -251,9 +247,9 @@
   function gameReset()
   {
     limpiandoSnake();
+    snakeLength=snakeBaseLength;
     createSnake(getRandom(0,9), getRandom(0,9));
     console.log("Llegue");
-    //alert("y klk, eso no e na");
   }
 
 
